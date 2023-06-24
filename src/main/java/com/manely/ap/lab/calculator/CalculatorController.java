@@ -11,12 +11,12 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 
 public class CalculatorController {
+    private final CalculatorModel model = new CalculatorModel();
 
-    private double calculatedNumber;
-    private Double currentNumber = 0.0;
+    private Double displayValue = 0.0;
     private long fractionLevel = 10;
     private boolean isFraction = false;
-    private String operator;
+
     private final NumberFormat formatter = NumberFormat.getInstance();
 
     @FXML
@@ -31,68 +31,59 @@ public class CalculatorController {
         displayTextField.setText(formatter.format(0));
     }
 
-    private void resetMainData() {
-        calculatedNumber = 0;
-        operator = null;
-    }
-
-    private void resetCurrentData() {
-        currentNumber = null;
+    private void reset() {
+        displayValue = null;
         isFraction = false;
         fractionLevel = 10;
     }
 
     private void onError() {
         displayTextField.setText("Error");
-        resetMainData();
-        resetCurrentData();
+        model.reset();
+        reset();
     }
 
     private void calculate() {
-        switch (operator) {
-            case "/" -> {
-                if (currentNumber == 0) {
-                    onError();
-                    return;
-                }
-                else {
-                    calculatedNumber /= currentNumber;
-                }
-            }
-            case "x" -> calculatedNumber *= currentNumber;
-            case "+" -> calculatedNumber += currentNumber;
-            case "-" -> calculatedNumber -= currentNumber;
-            case "=" -> calculatedNumber = currentNumber;
+        if (!model.calculate(displayValue)) {
+            onError();
         }
-
-        resetCurrentData();
-        displayTextField.setText(formatter.format(calculatedNumber));
+        else {
+            reset();
+            displayTextField.setText(formatter.format(model.getAccumulator()));
+        }
     }
 
     @FXML
     void ACButtonPressed() {
-        resetMainData();
-        resetCurrentData();
-        displayTextField.setText(formatter.format(calculatedNumber));
+        model.reset();
+        reset();
+        displayTextField.setText(formatter.format(0));
     }
 
     @FXML
     void operatorButtonPressed(ActionEvent event) {
-        if (operator != null && currentNumber != null) {
-            calculate();
-        }
+        if (displayValue != null) {
 
-        if (currentNumber != null) {
-            calculatedNumber = currentNumber;
-            resetCurrentData();
-        }
+            if (model.getOperator() != null) {
+                calculate();
+            }
+            else {
+                model.setAccumulator(displayValue);
+                reset();
+            }
 
-        operator = ((Button) event.getSource()).getText();
+        }
+        model.setOperator(((Button) event.getSource()).getText());
+
     }
 
     @FXML
     void dotButtonPressed() {
         if (!isFraction) {
+            if (displayValue == null) {
+                displayValue = 0.0;
+                displayTextField.setText(formatter.format(displayValue));
+            }
             displayTextField.appendText(".");
             isFraction = true;
         }
@@ -111,27 +102,27 @@ public class CalculatorController {
         }
 
         if (isFraction) {
-            if (currentNumber == null) {
-                currentNumber = 0.0;
-                displayTextField.setText(formatter.format(currentNumber));
+            if (displayValue == null) {
+                displayValue = 0.0;
+                displayTextField.setText(formatter.format(displayValue));
             }
             if (digit == 0) {
                 displayTextField.appendText(formatter.format(0));
             }
             else {
-                currentNumber += digit / fractionLevel;
-                displayTextField.setText(formatter.format(currentNumber));
+                displayValue += digit / fractionLevel;
+                displayTextField.setText(formatter.format(displayValue));
             }
             fractionLevel *= 10;
         }
         else {
-            if (currentNumber == null) {
-                currentNumber = digit;
+            if (displayValue == null) {
+                displayValue = digit;
             }
             else {
-                currentNumber = currentNumber * 10 + digit;
+                displayValue = displayValue * 10 + digit;
             }
-            displayTextField.setText(formatter.format(currentNumber));
+            displayTextField.setText(formatter.format(displayValue));
         }
 
     }

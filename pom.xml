@@ -54,7 +54,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.manely.ap.lab.calculator/com.manely.ap.lab.calculator.Calculator
+                            <mainClass>com.manely.ap.lab.calculator/com.manely.ap.lab.calculator.Driver
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
