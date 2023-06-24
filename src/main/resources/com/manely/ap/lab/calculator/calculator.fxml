@@ -1,16 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
-
 <?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.manely.ap.lab.calculator.HelloController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
-</VBox>
+<GridPane fx:id="root" alignment="CENTER" hgap="4.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#keyPressed" vgap="4.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/19" fx:controller="com.manely.ap.lab.calculator.CalculatorController">
+  <columnConstraints>
+      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="25.0" />
+      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="25.0" />
+    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="25.0" />
+    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="25.0" />
+  </columnConstraints>
+  <rowConstraints>
+      <RowConstraints minHeight="10.0" percentHeight="20.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" percentHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" percentHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" percentHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" percentHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <TextField fx:id="displayTextField" editable="false" focusTraversable="false" GridPane.columnSpan="3" />
+      <Button fx:id="ACButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#ACButtonPressed" text="AC" GridPane.columnIndex="3" />
+      <Button fx:id="sevenButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#sevenButtonPressed" text="7" GridPane.rowIndex="1" />
+      <Button fx:id="fourButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#fourButtonPressed" text="4" GridPane.rowIndex="2" />
+      <Button fx:id="oneButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#oneButtonPressed" text="1" GridPane.rowIndex="3" />
+      <Button fx:id="zeroButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#zeroButtonPressed" text="0" GridPane.rowIndex="4" />
+      <Button fx:id="eightButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#eightButtonPressed" text="8" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <Button fx:id="fiveButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#fiveButtonPressed" text="5" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      <Button fx:id="twoButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#twoButtonPressed" text="2" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+      <Button fx:id="dotButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#dotButtonPressed" text="." GridPane.columnIndex="1" GridPane.rowIndex="4" />
+      <Button fx:id="nineButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#nineButtonPressed" text="9" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+      <Button fx:id="sixButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#sixButtonPressed" text="6" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+      <Button fx:id="threeButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#threeButtonPressed" text="3" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+      <Button fx:id="equalButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#equalButtonPressed" text="=" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+      <Button fx:id="divisionButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#divisionButtonPressed" text="/" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+      <Button fx:id="multiplyButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#multiplyButtonPressed" text="x" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+      <Button fx:id="minusButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#minusButtonPressed" text="-" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+      <Button fx:id="plussButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#plusButtonPressed" text="+" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+   </children>
+   <padding>
+      <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+   </padding>
+</GridPane>
