@@ -4,11 +4,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
 
 public class CalculatorController {
     private final CalculatorModel model = new CalculatorModel();
@@ -53,15 +55,7 @@ public class CalculatorController {
         }
     }
 
-    @FXML
-    void ACButtonPressed() {
-        model.reset();
-        reset();
-        displayTextField.setText(formatter.format(0));
-    }
-
-    @FXML
-    void operatorButtonPressed(ActionEvent event) {
+    private void operate(String pendingOperator) {
         if (displayValue != null) {
 
             if (model.getOperator() != null) {
@@ -73,8 +67,21 @@ public class CalculatorController {
             }
 
         }
-        model.setOperator(((Button) event.getSource()).getText());
 
+        model.setOperator(pendingOperator);
+
+    }
+
+    @FXML
+    void ACButtonPressed() {
+        model.reset();
+        reset();
+        displayTextField.setText(formatter.format(0));
+    }
+
+    @FXML
+    void operatorButtonPressed(ActionEvent event) {
+        operate(((Button) event.getSource()).getText());
     }
 
     @FXML
@@ -89,18 +96,7 @@ public class CalculatorController {
         }
     }
 
-    @FXML
-    void digitButtonPressed(ActionEvent event) {
-        double digit;
-
-        try {
-            digit = formatter.parse(((Button) event.getSource()).getText()).doubleValue();
-        }
-        catch (ParseException e) {
-            onError();
-            return;
-        }
-
+    private void changeDisplayValue(double digit) {
         if (isFraction) {
             if (displayValue == null) {
                 displayValue = 0.0;
@@ -128,7 +124,82 @@ public class CalculatorController {
     }
 
     @FXML
+    void digitButtonPressed(ActionEvent event) {
+        double digit;
+
+        try {
+            digit = formatter.parse(((Button) event.getSource()).getText()).doubleValue();
+        }
+        catch (ParseException e) {
+            onError();
+            return;
+        }
+
+        changeDisplayValue(digit);
+    }
+
+    private ArrayList<KeyCode> pressedKeys = new ArrayList<>();
+
+    @FXML
     void keyPressed(KeyEvent event) {
+        pressedKeys.add(event.getCode());
+    }
+
+    @FXML
+    void keyReleased() {
+        KeyCode keyCode;
+        if (pressedKeys.size() == 0) {
+            return;
+        }
+        if (pressedKeys.size() == 1) {
+            keyCode = pressedKeys.get(0);
+        }
+        else if (pressedKeys.size() == 2) {
+            if (pressedKeys.get(0).equals(KeyCode.SHIFT) && pressedKeys.get(1).equals(KeyCode.EQUALS)) {
+                keyCode = KeyCode.PLUS;
+            }
+            else {
+                onError();
+                return;
+            }
+        }
+        else {
+            onError();
+            return;
+        }
+
+        switch (keyCode) {
+            case SLASH:
+                operate("/");
+                break;
+            case X:
+                operate("x");
+                break;
+            case PLUS:
+                operate("+");
+                break;
+            case MINUS:
+                operate("-");
+                break;
+            case EQUALS:
+                operate("=");
+                break;
+            case PERIOD:
+                dotButtonPressed();
+                break;
+            case BACK_SPACE:
+                ACButtonPressed();
+                return;
+            default:
+                try {
+                    double digit = formatter.parse(keyCode.getChar()).doubleValue();
+                    changeDisplayValue(digit);
+                }
+                catch (ParseException e) {
+                    onError();
+                }
+        }
+        pressedKeys.clear();
 
     }
 
