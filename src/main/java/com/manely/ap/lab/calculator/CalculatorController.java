@@ -7,158 +7,138 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
+
 public class CalculatorController {
+
+    private double calculatedNumber;
+    private Double currentNumber = 0.0;
+    private long fractionLevel = 10;
+    private boolean isFraction = false;
+    private String operator;
+    private final NumberFormat formatter = NumberFormat.getInstance();
 
     @FXML
     private GridPane root;
 
     @FXML
-    private Button ACButton;
-
-    @FXML
     private TextField displayTextField;
 
-    @FXML
-    private Button divisionButton;
 
-    @FXML
-    private Button dotButton;
+    public void initialize() {
+        root.setStyle("-fx-font-family: 'Apple Braille'");
+        displayTextField.setText(formatter.format(0));
+    }
 
-    @FXML
-    private Button eightButton;
+    private void resetMainData() {
+        calculatedNumber = 0;
+        operator = null;
+    }
 
-    @FXML
-    private Button equalButton;
+    private void resetCurrentData() {
+        currentNumber = null;
+        isFraction = false;
+        fractionLevel = 10;
+    }
 
-    @FXML
-    private Button fiveButton;
+    private void onError() {
+        displayTextField.setText("Error");
+        resetMainData();
+        resetCurrentData();
+    }
 
-    @FXML
-    private Button fourButton;
+    private void calculate() {
+        switch (operator) {
+            case "/" -> {
+                if (currentNumber == 0) {
+                    onError();
+                    return;
+                }
+                else {
+                    calculatedNumber /= currentNumber;
+                }
+            }
+            case "x" -> calculatedNumber *= currentNumber;
+            case "+" -> calculatedNumber += currentNumber;
+            case "-" -> calculatedNumber -= currentNumber;
+            case "=" -> calculatedNumber = currentNumber;
+        }
 
-    @FXML
-    private Button minusButton;
-
-    @FXML
-    private Button multiplyButton;
-
-    @FXML
-    private Button nineButton;
-
-    @FXML
-    private Button oneButton;
-
-    @FXML
-    private Button plussButton;
-
-    @FXML
-    private Button sevenButton;
-
-    @FXML
-    private Button sixButton;
-
-    @FXML
-    private Button threeButton;
-
-    @FXML
-    private Button twoButton;
-
-    @FXML
-    private Button zeroButton;
-
-    @FXML
-    void ACButtonPressed(ActionEvent event) {
-
+        resetCurrentData();
+        displayTextField.setText(formatter.format(calculatedNumber));
     }
 
     @FXML
-    void divisionButtonPressed(ActionEvent event) {
-
+    void ACButtonPressed() {
+        resetMainData();
+        resetCurrentData();
+        displayTextField.setText(formatter.format(calculatedNumber));
     }
 
     @FXML
-    void dotButtonPressed(ActionEvent event) {
+    void operatorButtonPressed(ActionEvent event) {
+        if (operator != null && currentNumber != null) {
+            calculate();
+        }
 
+        if (currentNumber != null) {
+            calculatedNumber = currentNumber;
+            resetCurrentData();
+        }
+
+        operator = ((Button) event.getSource()).getText();
     }
 
     @FXML
-    void eightButtonPressed(ActionEvent event) {
-
+    void dotButtonPressed() {
+        if (!isFraction) {
+            displayTextField.appendText(".");
+            isFraction = true;
+        }
     }
 
     @FXML
-    void equalButtonPressed(ActionEvent event) {
+    void digitButtonPressed(ActionEvent event) {
+        double digit;
 
-    }
+        try {
+            digit = formatter.parse(((Button) event.getSource()).getText()).doubleValue();
+        }
+        catch (ParseException e) {
+            onError();
+            return;
+        }
 
-    @FXML
-    void fiveButtonPressed(ActionEvent event) {
-
-    }
-
-    @FXML
-    void fourButtonPressed(ActionEvent event) {
+        if (isFraction) {
+            if (currentNumber == null) {
+                currentNumber = 0.0;
+                displayTextField.setText(formatter.format(currentNumber));
+            }
+            if (digit == 0) {
+                displayTextField.appendText(formatter.format(0));
+            }
+            else {
+                currentNumber += digit / fractionLevel;
+                displayTextField.setText(formatter.format(currentNumber));
+            }
+            fractionLevel *= 10;
+        }
+        else {
+            if (currentNumber == null) {
+                currentNumber = digit;
+            }
+            else {
+                currentNumber = currentNumber * 10 + digit;
+            }
+            displayTextField.setText(formatter.format(currentNumber));
+        }
 
     }
 
     @FXML
     void keyPressed(KeyEvent event) {
 
-    }
-
-    @FXML
-    void minusButtonPressed(ActionEvent event) {
-
-    }
-
-    @FXML
-    void multiplyButtonPressed(ActionEvent event) {
-
-    }
-
-    @FXML
-    void nineButtonPressed(ActionEvent event) {
-
-    }
-
-    @FXML
-    void oneButtonPressed(ActionEvent event) {
-
-    }
-
-    @FXML
-    void plusButtonPressed(ActionEvent event) {
-
-    }
-
-    @FXML
-    void sevenButtonPressed(ActionEvent event) {
-
-    }
-
-    @FXML
-    void sixButtonPressed(ActionEvent event) {
-
-    }
-
-    @FXML
-    void threeButtonPressed(ActionEvent event) {
-
-    }
-
-    @FXML
-    void twoButtonPressed(ActionEvent event) {
-
-    }
-
-    @FXML
-    void zeroButtonPressed(ActionEvent event) {
-
-    }
-
-
-    public void initialize() {
-        root.setStyle("-fx-font-family: 'Apple Braille'");
     }
 
 }
