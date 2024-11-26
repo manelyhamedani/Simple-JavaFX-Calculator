@@ -15,6 +15,8 @@ This project is a simple **Calculator** application built with **JavaFX**. It su
 - **View (FXML)**: The user interface, created using JavaFX FXML, including buttons and layout.
 - **Controller**: Manages user input and interacts with the model to perform calculations.
 
+## How to Run
+
 ### Prerequisites
 
 - **Java 11 or higher** is required.
